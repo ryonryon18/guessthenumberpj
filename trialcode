@@ -1,0 +1,65 @@
+import sys
+import random
+
+# 初期メッセージ
+sys.stdout.buffer.write(
+    b'Welcome! Please enter two numbers to set the range for guessing.\n'
+    b'First, enter the minimum value (n):\n'
+)
+sys.stdout.flush()
+
+# ユーザーからnとmを入力
+try:
+    n = int(sys.stdin.buffer.readline().strip())
+    sys.stdout.buffer.write(b'Now, enter the maximum value (m):\n')
+    sys.stdout.flush()
+    m = int(sys.stdin.buffer.readline().strip())
+except ValueError:
+    sys.stdout.buffer.write(
+        b'Error: Please enter valid integers for both n and m.\n'
+    )
+    sys.exit()
+
+# nがmより大きい場合のエラーメッセージ
+if n > m:
+    sys.stdout.buffer.write(b'Error: The minimum value (n) must be less than or equal to the maximum value (m).\n')
+    sys.exit()
+
+# ランダムな数を生成
+random_num = random.randint(n, m)
+sys.stdout.buffer.write(
+    b'Great! A random number has been selected.\n'
+    b'Now, try to guess the number within the range you provided.\n'
+    b'You have 5 attempts to find the correct answer.\n'
+)
+sys.stdout.flush()
+
+# ユーザーが当てられる回数の制限
+attempts = 5
+
+# 当てるループ
+for i in range(attempts):
+    sys.stdout.buffer.write(
+        f'Attempt {i + 1}/{attempts}: Enter your guess (an integer between {n} and {m}):\n'.encode()
+    )
+    sys.stdout.flush()
+    
+    try:
+        guess = int(sys.stdin.buffer.readline().strip())
+    except ValueError:
+        sys.stdout.buffer.write(b'Error: Please enter a valid integer.\n')
+        continue
+    
+    if guess == random_num:
+        sys.stdout.buffer.write(b'Congratulations! You guessed the correct number!\n')
+        sys.exit()
+    elif guess < random_num:
+        sys.stdout.buffer.write(b'Too low. Try guessing a higher number.\n')
+    else:
+        sys.stdout.buffer.write(b'Too high. Try guessing a lower number.\n')
+
+# ユーザーが失敗した場合
+sys.stdout.buffer.write(b'Sorry, you are out of attempts. Better luck next time!\n')
+sys.stdout.buffer.write(f'The correct number was {random_num}.\n'.encode())
+sys.exit()
+
